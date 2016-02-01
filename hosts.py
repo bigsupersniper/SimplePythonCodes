@@ -49,16 +49,17 @@ def replace_hosts_windows(content):
     print datetime.now().strftime('%Y-%m-%d %H-%M-%S') + '->' ,'replace system hosts file success'
     subprocess.check_call('ipconfig /flushdns')
 
-def replace_hosts_android(content):
+def replace_hosts_linux(content):
     '''
     [linux] write hosts data to file and replace system hosts file
     :param content:
     :return:
     '''
-    with open('/sdcard/hosts' , 'w') as f:
+    with open('/etc/hosts.new' , 'w') as f:
         f.write(content)
     f.close()
-    os.system('su -c "cp /storage/emulated/0/hosts /system/etc/hosts"')
+    os.system('su -c "cp /etc/hosts /etc/hosts.bak"')
+    os.system('su -c "cp /etc/hosts.new /etc/hosts"')
     os.system('echo "{} -> success replace hosts file"'.format(datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
 
 def fetch_replace_hosts():
@@ -77,7 +78,7 @@ def fetch_replace_hosts():
                 if sys == 'Windows':
                     replace_hosts_windows(data)
                 elif sys == 'Linux':
-                    replace_hosts_android(data)
+                    replace_hosts_linux(data)
                 else:
                     print 'unsupport platform' , sys
                 break
@@ -88,3 +89,5 @@ def fetch_replace_hosts():
 
 if __name__ == '__main__':
     fetch_replace_hosts()
+
+
