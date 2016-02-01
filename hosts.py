@@ -44,6 +44,7 @@ def replace_hosts_windows(content):
     with open('hosts' , 'w') as f:
         f.write(content)
     f.close()
+    shutil.copyfile('C:\Windows\System32\drivers\etc\hosts' , 'C:\Windows\System32\drivers\etc\hosts.bak')
     shutil.move('hosts' ,'C:\Windows\System32\drivers\etc\hosts')
     print datetime.now().strftime('%Y-%m-%d %H-%M-%S') + '->' ,'replace system hosts file success'
     subprocess.check_call('ipconfig /flushdns')
