@@ -41,11 +41,11 @@ def replace_hosts_windows(content):
     :param content:
     :return:
     '''
-    with open('hosts' , 'w') as f:
+    with open('C:\Windows\System32\drivers\etc\hosts.new' , 'w') as f:
         f.write(content)
     f.close()
     shutil.copyfile('C:\Windows\System32\drivers\etc\hosts' , 'C:\Windows\System32\drivers\etc\hosts.bak')
-    shutil.move('hosts' ,'C:\Windows\System32\drivers\etc\hosts')
+    shutil.copyfile('C:\Windows\System32\drivers\etc\hosts.new' ,'C:\Windows\System32\drivers\etc\hosts')
     print datetime.now().strftime('%Y-%m-%d %H-%M-%S') + '->' ,'replace system hosts file success'
     subprocess.check_call('ipconfig /flushdns')
 
