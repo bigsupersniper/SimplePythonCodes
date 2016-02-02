@@ -41,13 +41,14 @@ def replace_hosts_windows(content):
     :param content:
     :return:
     '''
-    with open('C:\Windows\System32\drivers\etc\hosts.new' , 'w') as f:
+    dstdir = 'C:\Windows\System32\drivers\etc'
+    with open(dstdir + '\hosts.new' , 'w') as f:
         f.write(content)
     f.close()
-    shutil.copyfile('C:\Windows\System32\drivers\etc\hosts' , 'C:\Windows\System32\drivers\etc\hosts.bak')
-    shutil.copyfile('C:\Windows\System32\drivers\etc\hosts.new' ,'C:\Windows\System32\drivers\etc\hosts')
-    print datetime.now().strftime('%Y-%m-%d %H-%M-%S') + '->' ,'replace system hosts file success'
-    subprocess.check_call('ipconfig /flushdns')
+    shutil.copyfile(dstdir + '\hosts' , dstdir + '\hosts.bak')
+    shutil.copyfile(dstdir + '\hosts.new' , dstdir + '\hosts')
+    print datetime.now().strftime('%Y-%m-%d %H-%M-%S') , '->' ,'replace system hosts file success'
+    subprocess.check_call(['ipconfig' , '/flushdns'])
 
 def replace_hosts_linux(content):
     '''
@@ -55,12 +56,17 @@ def replace_hosts_linux(content):
     :param content:
     :return:
     '''
-    with open('/etc/hosts.new' , 'w') as f:
+    dst = 'hosts.new'
+    if os.path.exists('/sdcard'):
+        dst = '/sdcard/' + dst
+    else:
+        dst = '/tmp/' + dst
+    with open(dst , 'w') as f:
         f.write(content)
     f.close()
     os.system('su -c "cp /etc/hosts /etc/hosts.bak"')
-    os.system('su -c "cp /etc/hosts.new /etc/hosts"')
-    os.system('echo "{} -> success replace hosts file"'.format(datetime.now().strftime('%Y-%m-%d %H-%M-%S')))
+    os.system('su -c "cp {} /etc/hosts"'.format(dst))
+    print datetime.now().strftime('%Y-%m-%d %H-%M-%S') , '->' ,'replace system hosts file success'
 
 def fetch_replace_hosts():
     print datetime.now().strftime('%Y-%m-%d %H-%M-%S') + '->' , 'begin fetching hosts data'
